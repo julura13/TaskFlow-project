@@ -1,0 +1,44 @@
+created:
+    - app/Http/Controllers/ProjectController.php
+    - app/Http/Controllers/TaskController.php
+    - app/Http/Controllers/CommentController.php
+    - database/factories/ProjectFactory.php
+    - database/factories/TaskFactory.php
+    - database/factories/CommentFactory.php
+    - database/factories/TaskHistoryFactory.php
+    - database/migrations/2026_02_22_105722_create_projects_table.php
+    - database/migrations/2026_02_22_105723_create_tasks_table.php
+    - database/migrations/2026_02_22_105724_create_comments_table.php
+    - database/migrations/2026_02_22_105725_create_task_histories_table.php
+    - app/Models/Project.php
+    - app/Models/Task.php
+    - app/Models/Comment.php
+    - app/Models/TaskHistory.php
+    - tests/Feature/Http/Controllers/ProjectControllerTest.php
+    - tests/Feature/Http/Controllers/TaskControllerTest.php
+    - tests/Feature/Http/Controllers/CommentControllerTest.php
+    - app/Http/Requests/ProjectStoreRequest.php
+    - app/Http/Requests/ProjectUpdateRequest.php
+    - app/Http/Requests/TaskStoreRequest.php
+    - app/Http/Requests/TaskUpdateRequest.php
+    - app/Http/Requests/CommentStoreRequest.php
+    - app/Http/Requests/CommentUpdateRequest.php
+    - resources/views/project/index.blade.php
+    - resources/views/project/create.blade.php
+    - resources/views/project/show.blade.php
+    - resources/views/project/edit.blade.php
+    - resources/views/task/index.blade.php
+    - resources/views/task/create.blade.php
+    - resources/views/task/show.blade.php
+    - resources/views/task/edit.blade.php
+    - resources/views/comment/index.blade.php
+    - resources/views/comment/create.blade.php
+    - resources/views/comment/show.blade.php
+    - resources/views/comment/edit.blade.php
+updated:
+    - routes/web.php
+models:
+    Project: { title: 'string:255', description: 'longtext nullable', owner_id: 'id foreign:users', relationships: { belongsTo: 'User:owner', hasMany: Task } }
+    Task: { title: 'string:255', description: 'longtext nullable', status: 'string:50', project_id: 'id foreign:projects', assigned_to: 'id nullable foreign:users', relationships: { belongsTo: 'Project, User:assignedTo', hasMany: 'Comment, TaskHistory' } }
+    Comment: { body: longtext, user_id: 'id foreign:users', task_id: 'id foreign:tasks', relationships: { belongsTo: 'User, Task' } }
+    TaskHistory: { task_id: 'id foreign:tasks', event_type: 'string:50', old_values: 'json nullable', new_values: 'json nullable', relationships: { belongsTo: Task } }

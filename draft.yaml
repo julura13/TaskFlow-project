@@ -1,0 +1,45 @@
+# TaskFlow – Laravel Blueprint draft
+# Run: sail artisan blueprint:build (or php artisan blueprint:build)
+# User model already exists; add hasMany(Project), hasMany(Task,'assigned_to'), hasMany(Comment) on User manually after build.
+
+models:
+  Project:
+    title: string:255
+    description: longtext nullable
+    owner_id: id foreign:users
+    relationships:
+      belongsTo: User:owner
+      hasMany: Task
+
+  Task:
+    title: string:255
+    description: longtext nullable
+    status: string:50
+    project_id: id foreign:projects
+    assigned_to: id nullable foreign:users
+    relationships:
+      belongsTo: Project, User:assignedTo
+      hasMany: Comment, TaskHistory
+
+  Comment:
+    body: longtext
+    user_id: id foreign:users
+    task_id: id foreign:tasks
+    relationships:
+      belongsTo: User, Task
+
+  TaskHistory:
+    task_id: id foreign:tasks
+    event_type: string:50
+    old_values: json nullable
+    new_values: json nullable
+    relationships:
+      belongsTo: Task
+
+controllers:
+  Project:
+    resource
+  Task:
+    resource
+  Comment:
+    resource
