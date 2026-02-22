@@ -20,7 +20,7 @@ return new class extends Migration
             $table->longText('description')->nullable();
             $table->enum('status', array_column(Status::cases(), 'value'))->default(Status::Active->value);
             $table->string('slug', 255)->unique();
-            $table->foreignId('owner_id')->constrained('users');
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
 

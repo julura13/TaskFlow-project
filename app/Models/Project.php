@@ -21,7 +21,8 @@ class Project extends Model
         'title',
         'description',
         'status',
-        'owner_id',
+        'slug',
+        'user_id',
     ];
 
     /**
@@ -33,7 +34,7 @@ class Project extends Model
     {
         return [
             'id' => 'integer',
-            'owner_id' => 'integer',
+            'user_id' => 'integer',
             'status' => Status::class,
         ];
     }
