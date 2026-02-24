@@ -21,11 +21,10 @@ class TaskUpdateRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'status' => ['required', 'string', 'max:50'],
+            'description' => ['nullable', 'string', 'max:5000'],
+            'status' => ['required', 'string', 'in:'.implode(',', array_column(\App\Enums\Status::cases(), 'value'))],
             'project_id' => ['required', 'integer', 'exists:projects,id'],
-            'assigned_to' => ['nullable'],
-            'assigned_to_id' => ['required', 'integer', 'exists:Users,id'],
+            'assigned_to' => ['nullable', 'integer', 'exists:users,id'],
         ];
     }
 }

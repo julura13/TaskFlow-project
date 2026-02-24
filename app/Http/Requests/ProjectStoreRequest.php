@@ -21,8 +21,8 @@ class ProjectStoreRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'owner_id' => ['required', 'integer', 'exists:users,id'],
+            'description' => ['nullable', 'string', 'max:5000'],
+            'status' => ['required', 'string', 'in:'.implode(',', array_column(\App\Enums\Status::cases(), 'value'))],
         ];
     }
 }
