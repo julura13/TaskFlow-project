@@ -12,9 +12,6 @@
         <x-sidebar-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
             {{ __('Dashboard') }}
         </x-sidebar-link>
-        <x-sidebar-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
-            {{ __('Projects') }}
-        </x-sidebar-link>
     </nav>
 
     <div class="border-t border-gray-200 p-4">

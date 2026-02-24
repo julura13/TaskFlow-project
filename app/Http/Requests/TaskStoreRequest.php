@@ -21,11 +21,8 @@ class TaskStoreRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'status' => ['required', 'string', 'max:50'],
+            'description' => ['nullable', 'string', 'max:5000'],
             'project_id' => ['required', 'integer', 'exists:projects,id'],
-            'assigned_to' => ['nullable'],
-            'assigned_to_id' => ['required', 'integer', 'exists:Users,id'],
         ];
     }
 }

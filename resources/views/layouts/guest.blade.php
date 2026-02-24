@@ -20,7 +20,7 @@
                 <x-taskflow-logo />
             </div>
 
-            <div class="w-full sm:max-w-md px-8 py-10 bg-white border border-gray-200 rounded-xl shadow-sm">
+            <div class="w-full sm:max-w-md px-8 py-10 bg-white border border-gray-200 rounded-xl shadow-lg">
                 {{ $slot }}
             </div>
         </div>
