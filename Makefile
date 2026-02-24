@@ -28,8 +28,7 @@ init:
 	@echo "Waiting for MySQL..."
 	@sleep 5
 	$(SAIL) artisan key:generate --no-interaction 2>/dev/null || true
-	$(SAIL) artisan migrate --force
-	$(SAIL) artisan db:seed --force
+	$(SAIL) artisan migrate:fresh --seed --force
 	@echo "Done. App: http://localhost  Mail (Mailpit): http://localhost:8025"
 
 # Run an Artisan command. Example: make artisan cmd="report:tasks"
