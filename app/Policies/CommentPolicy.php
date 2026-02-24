@@ -7,11 +7,6 @@ use App\Models\User;
 
 class CommentPolicy
 {
-    public function create(User $user): bool
-    {
-        return true;
-    }
-
     public function delete(User $user, Comment $comment): bool
     {
         return $comment->user_id === $user->id;

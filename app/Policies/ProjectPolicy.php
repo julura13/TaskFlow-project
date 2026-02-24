@@ -7,28 +7,41 @@ use App\Models\User;
 
 class ProjectPolicy
 {
-    public function viewAny(User $user): bool
-    {
-        return true;
-    }
-
     public function view(User $user, Project $project): bool
     {
         return true;
     }
 
-    public function create(): bool
+    public function createProject(User $user): bool
     {
         return true;
     }
 
-    public function update(Project $project): bool
+    public function updateProject(User $user, Project $project): bool
     {
-        return $project->user_id === auth()->user()->id;
+        return $this->isOwner($user, $project);
     }
 
-    public function delete(User $user, Project $project): bool
+    public function deleteProject(User $user, Project $project): bool
     {
-        return $user->id === $project->user_id;
+        return $this->isOwner($user, $project);
+    }
+
+    /**
+     * Only project members (owner or in project_user) can create tasks.
+     */
+    public function createTask(User $user, Project $project): bool
+    {
+        return $this->isOwner($user, $project) || $this->isMember($user, $project);
+    }
+
+    protected function isOwner(User $user, Project $project): bool
+    {
+        return $user->id === $project->owner_id;
+    }
+
+    protected function isMember(User $user, Project $project): bool
+    {
+        return $project->users()->where('user_id', $user->id)->exists();
     }
 }
