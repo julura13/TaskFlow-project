@@ -6,6 +6,6 @@
     .bg-dots {
         background-image: radial-gradient(#E53935 1px, transparent 1px);
         background-size: 24px 24px;
-        background-color: #ffffff;
+        @apply bg-gray-50;
     }
 }

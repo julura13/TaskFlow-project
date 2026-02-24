@@ -7,16 +7,7 @@
         <form action="{{ route('tasks.update', $task) }}" method="POST" class="space-y-5">
             @csrf
             @method('PUT')
-
-            <div>
-                <x-input-label for="project_id" :value="__('Project')" />
-                <select id="project_id" name="project_id" class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-taskflow-dark focus:border-taskflow-red focus:ring-2 focus:ring-taskflow-red/20 focus:outline-none" required>
-                    @foreach ($projects as $p)
-                        <option value="{{ $p->id }}" {{ old('project_id', $task->project_id) == $p->id ? 'selected' : '' }}>{{ $p->title }}</option>
-                    @endforeach
-                </select>
-                <x-input-error :messages="$errors->get('project_id')" class="mt-2" />
-            </div>
+            <input type="hidden" name="project_id" value="{{ $task->project_id }}" />
 
             <div>
                 <x-input-label for="title" :value="__('Title')" />

@@ -27,6 +27,9 @@
                 <li>
                     <a href="{{ route('projects.show', $project) }}" class="block rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:border-gray-300 hover:shadow">
                         <span class="font-medium text-taskflow-dark">{{ $project->title }}</span>
+                        @if ($project->owner)
+                            <p class="mt-1 text-xs text-gray-500">{{ __('Owner') }}: {{ $project->owner->name }}</p>
+                        @endif
                         @if ($project->description)
                             <p class="mt-1 text-sm text-gray-600 line-clamp-2">{{ $project->description }}</p>
                         @endif
