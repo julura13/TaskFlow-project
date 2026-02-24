@@ -2,62 +2,65 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Status;
 use App\Http\Requests\ProjectStoreRequest;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ProjectController extends Controller
 {
     public function index(Request $request): View
     {
-        $projects = $request->user()->projects()->latest()->paginate(10);
+        $projects = $request->user()->projects()->with('owner')->latest()->paginate(10);
 
         return view('project.index', [
             'projects' => $projects,
         ]);
     }
 
-    public function create(Request $request): View
+    public function create(): View
     {
-        Gate::authorize('create', Project::class);
+        Gate::authorize('createProject', Project::class);
 
         return view('project.create');
     }
 
     public function store(ProjectStoreRequest $request): RedirectResponse
     {
-        Gate::authorize('create', Project::class);
+        Gate::authorize('createProject', Project::class);
 
         $data = $request->validated();
-        $data['user_id'] = $request->user()->id;
-        $data['slug'] = Str::slug($data['title']);
-        if (Project::where('slug', $data['slug'])->exists()) {
-            $data['slug'] = $data['slug'].'-'.Str::random(5);
-        }
+
+        $data['owner_id'] = $request->user()->id;
 
         $project = Project::create($data);
+        $project->users()->attach($request->user()->id);
 
         return redirect()->route('projects.show', $project)->with('status', __('Project created.'));
     }
 
-    public function show(Request $request, Project $project): View
+    public function show(Project $project): View
     {
         Gate::authorize('view', $project);
 
-        $project->load('tasks');
-        $tasks = $project->tasks; // Laravel Collection
+        $project->loadMissing('owner');
+        $tasks = $project->tasks()->orderByStatus()->get();
+        $project->setRelation('tasks', $tasks);
         $totalTasks = $tasks->count();
-        $completedTasks = $tasks->where('status', \App\Enums\Status::Completed)->count();
+        $completedTasks = $tasks->where('status', Status::Completed)->count();
         $pendingTasks = $totalTasks - $completedTasks;
         $completionPercentage = $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100, 1) : 0;
+
+        $users = User::orderBy('name')->get();
 
         return view('project.show', [
             'project' => $project,
             'tasks' => $tasks,
+            'users' => $users,
             'totalTasks' => $totalTasks,
             'completedTasks' => $completedTasks,
             'pendingTasks' => $pendingTasks,
@@ -65,33 +68,29 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function edit(Request $request, Project $project): View
+    public function edit(Project $project): View
     {
-        Gate::authorize('update', $project);
+        Gate::authorize('updateProject', $project);
 
         return view('project.edit', [
             'project' => $project,
         ]);
     }
 
-    public function update(Request $request, Project $project): RedirectResponse
+    public function update(ProjectStoreRequest $request, Project $project): RedirectResponse
     {
-        Gate::authorize('update', $project);
+        Gate::authorize('updateProject', $project);
 
         $data = $request->validated();
-        $data['slug'] = Str::slug($data['title']);
-        if (Project::where('slug', $data['slug'])->where('id', '!=', $project->id)->exists()) {
-            $data['slug'] = $data['slug'].'-'.Str::random(5);
-        }
 
         $project->update($data);
 
         return redirect()->route('projects.show', $project)->with('status', __('Project updated.'));
     }
 
-    public function destroy(Request $request, Project $project): RedirectResponse
+    public function destroy(Project $project): RedirectResponse
     {
-        Gate::authorize('delete', $project);
+        Gate::authorize('deleteProject', $project);
 
         $project->delete();
 
