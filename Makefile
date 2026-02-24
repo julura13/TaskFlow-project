@@ -20,6 +20,8 @@ down:
 # Sail default stack includes mysql + mailpit (for capturing mail). For Mailhog, add it to docker-compose manually.
 init:
 	composer install
+	npm install
+	npm run build
 	@if [ ! -f .env ]; then cp .env.example .env; echo "Created .env from .env.example"; fi
 	@if [ ! -f docker-compose.yml ]; then php artisan sail:install --no-interaction; fi
 	$(SAIL) up -d
