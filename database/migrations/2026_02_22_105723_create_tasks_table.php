@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->string('title', 255);
             $table->longText('description')->nullable();
-            $table->enum('status', array_column(Status::cases(), 'value'))->default(Status::Active->value);
+            $table->enum('status', array_column(Status::cases(), 'value'))->default(Status::Pending->value);
             $table->foreignId('project_id')->constrained();
             $table->foreignId('assigned_to')->nullable()->constrained('users');
             $table->timestamps();

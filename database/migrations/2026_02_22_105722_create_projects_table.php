@@ -18,9 +18,8 @@ return new class extends Migration
             $table->id();
             $table->string('title', 255);
             $table->longText('description')->nullable();
-            $table->enum('status', array_column(Status::cases(), 'value'))->default(Status::Active->value);
-            $table->string('slug', 255)->unique();
-            $table->foreignId('user_id')->constrained('users');
+            $table->enum('status', array_column(Status::cases(), 'value'))->default(Status::Pending->value);
+            $table->foreignId('owner_id')->constrained('users');
             $table->timestamps();
         });
 
